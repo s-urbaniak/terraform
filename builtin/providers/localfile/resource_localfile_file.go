@@ -1,6 +1,7 @@
 package localfile
 
 import (
+	"fmt"
 	"os"
 
 	"io/ioutil"
@@ -20,9 +21,10 @@ func resourceLocalFile() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"content": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:             schema.TypeString,
+				Required:         true,
+				ForceNew:         true,
+				DiffSuppressFunc: diffSuppress,
 			},
 			"destination": {
 				Type:        schema.TypeString,
@@ -30,8 +32,22 @@ func resourceLocalFile() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 			},
+			"sensitive": {
+				Type:     schema.TypeBool,
+				Required: false,
+				ForceNew: false,
+			},
 		},
 	}
+}
+
+func diffSuppress(k, old, new string, d *schema.ResourceData) bool {
+	if data, ok := d.GetOk("sensitive"); ok {
+		fmt.Printf("!!!!! value %v type %T\n", data, data)
+		return true
+	}
+
+	return false
 }
 
 func resourceLocalFileRead(d *schema.ResourceData, _ interface{}) error {
