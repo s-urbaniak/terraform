@@ -5,7 +5,7 @@ import (
 	"log"
 	"path/filepath"
 
-	"github.com/hashicorp/go-checkpoint"
+	checkpoint "github.com/hashicorp/go-checkpoint"
 	"github.com/hashicorp/terraform/command"
 )
 
@@ -31,6 +31,7 @@ func runCheckpoint(c *Config) {
 		checkpointResult <- nil
 		return
 	}
+	log.Printf("[INFO] Checkpoint configdir: %s", configDir)
 
 	version := Version
 	if VersionPrerelease != "" {
@@ -42,6 +43,7 @@ func runCheckpoint(c *Config) {
 		log.Printf("[INFO] Checkpoint signature disabled")
 		signaturePath = ""
 	}
+	log.Printf("[INFO] Checkpoint signature path: %s", signaturePath)
 
 	resp, err := checkpoint.Check(&checkpoint.CheckParams{
 		Product:       "terraform",
