@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	mrand "math/rand"
 	"net/http"
 	"net/url"
@@ -16,6 +17,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"runtime"
+	"runtime/debug"
 	"strings"
 	"time"
 
@@ -95,6 +97,9 @@ type CheckAlert struct {
 
 // Check checks for alerts and new version information.
 func Check(p *CheckParams) (*CheckResponse, error) {
+	log.Printf("[INFO] Checkpoint Check: %+v", *p)
+	log.Printf("[INFO] Checkpoint Check stack: %s", string(debug.Stack()))
+
 	if disabled := os.Getenv("CHECKPOINT_DISABLE"); disabled != "" && !p.Force {
 		return &CheckResponse{}, nil
 	}
